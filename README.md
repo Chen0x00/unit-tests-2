@@ -17,6 +17,7 @@
 - financial_pay   调用快钱api实现充值，退款，提现等功能
 
 **项目特色：**
+
 1.使用zookeeper作为注册中心，管理调度dubbo服务以及消费者，实现了项目的分布式架构，每个模块完成单独的功能
 
 2.使用redis替换springboot默认的cache缓存，配置并使用自定义的redistemplate读取数据
