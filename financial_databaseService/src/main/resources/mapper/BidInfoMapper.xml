@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.financial_dataService.mapper.BidInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.rick.financial_api.domain.BidInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="loanId" column="loan_id" jdbcType="INTEGER"/>
+            <result property="uid" column="uid" jdbcType="INTEGER"/>
+            <result property="bidMoney" column="bid_money" jdbcType="DECIMAL"/>
+            <result property="bidTime" column="bid_time" jdbcType="TIMESTAMP"/>
+            <result property="bidStatus" column="bid_status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,loan_id,uid,
+        bid_money,bid_time,bid_status
+    </sql>
+    <!--分页查询对应的投资记录和手机号-->
+    <select id="getBLByLoanId" resultType="com.rick.financial_api.pojo.BidAndLoan">
+        SELECT
+            bid.id,
+            CONCAT( SUBSTRING( u.phone FROM 1 FOR 3 ), "******", SUBSTRING( u.phone FROM 10 FOR 2 ) ) AS phone,
+            DATE_FORMAT( bid.bid_time, "%Y-%m-%d %H:%i:%s" ) AS bidTime,
+            bid.bid_money AS bidMoney
+        FROM
+            b_bid_info bid
+                JOIN u_user u ON bid.uid = u.id
+        WHERE
+            bid.loan_id = ${loanId}
+        ORDER BY
+            bid.bid_time DESC
+            LIMIT #{offset},#{pageSize}
+    </select>
+
+    <!--查询满标产品的投资记录-->
+    <select id="getByLoanId" resultType="com.rick.financial_api.domain.BidInfo">
+        select * from b_bid_info where loan_id = ${loanId} AND bid_status=1 order by id
+    </select>
+
+</mapper>

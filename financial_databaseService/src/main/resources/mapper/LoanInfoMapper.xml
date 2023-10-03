@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.financial_dataService.mapper.LoanInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.rick.financial_api.domain.LoanInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+            <result property="rate" column="rate" jdbcType="DECIMAL"/>
+            <result property="cycle" column="cycle" jdbcType="INTEGER"/>
+            <result property="releaseTime" column="release_time" jdbcType="DATE"/>
+            <result property="productType" column="product_type" jdbcType="INTEGER"/>
+            <result property="productNo" column="product_no" jdbcType="VARCHAR"/>
+            <result property="productMoney" column="product_money" jdbcType="DECIMAL"/>
+            <result property="leftProductMoney" column="left_product_money" jdbcType="DECIMAL"/>
+            <result property="bidMinLimit" column="bid_min_limit" jdbcType="DECIMAL"/>
+            <result property="bidMaxLimit" column="bid_max_limit" jdbcType="DECIMAL"/>
+            <result property="productStatus" column="product_status" jdbcType="INTEGER"/>
+            <result property="productFullTime" column="product_full_time" jdbcType="TIMESTAMP"/>
+            <result property="productDesc" column="product_desc" jdbcType="VARCHAR"/>
+            <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,product_name,rate,
+        cycle,release_time,product_type,
+        product_no,product_money,left_product_money,
+        bid_min_limit,bid_max_limit,product_status,
+        product_full_time,product_desc,version
+    </sql>
+
+    <!--    /**
+     *更新产品剩余金额
+     */-->
+    <update id="updateLeftProductMoney">
+        update b_loan_info
+        set left_product_money=left_product_money - #{money}
+        where id=#{loanId} and(left_product_money - #{money} >=0)
+    </update>
+    <!--更新收入状态-->
+    <update id="updateStatus">
+        update b_loan_info set product_status=#{productStatusPlan}
+        where id=#{id}
+    </update>
+
+    <!--找出满标的理财产品-->
+    <select id="queryFullTimeLoan" resultType="com.rick.financial_api.domain.LoanInfo">
+        SELECT
+        *
+        FROM
+        b_loan_info
+        WHERE
+        product_status = 1
+        AND product_full_time >= #{begin}
+        AND product_full_time &lt; #{end}
+        ORDER BY id
+    </select>
+
+
+</mapper>

@@ -1,0 +1,96 @@
+spring:
+  application:
+    name: financial_web
+  autoconfigure:
+    # 禁用自动配置数据源，防止报错,-可以指定多行
+    exclude:
+        - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#        - org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration
+
+# 网页热更新，默认端口为35729
+  devtools:
+    livereload:
+      enabled: true
+      port: 35730
+
+
+# redis配置信息
+  redis:
+    host: 192.168.198.131
+    port: 6378
+    password: 123456
+    lettuce:
+      pool:
+#        all is default
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+  thymeleaf:
+    cache: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true #是否强制http请求使用utf-8
+    context-path: /api
+
+#dubbo配置
+dubbo:
+  # 服务名称
+  application:
+    name: financial_web
+    #注册中心的协议和地址
+  registry:
+    protocol: zookeeper
+    address: zookeeper://192.168.198.131:2181
+    #超时时间
+    timeout: 10000
+  config-center:
+    timeout: 10000
+    #通信规则（通信协议和接口）
+  protocol:
+    name: dubbo
+    port: 20880
+    #连接监控中心
+  monitor:
+    protocol: registry
+
+
+#API接口配置
+aliyun:
+  sms:
+    url: https://smsv2.market.alicloudapi.com/sms/sendv2                    #https://dfsns.market.alicloudapi.com/data/send_sms
+    appcode: 30e58febaf874777a4583d9378979f49
+    registerContent: 【光明金融】你的注册验证码是：%s,3分钟内有效，请勿泄露给他人。如非本人操作，请忽略本短信
+    loginContent: 【光明金融】你的登录验证码是：%s,3分钟内有效，请勿泄露给他人。如非本人操作，请忽略本短信
+  realname:
+    url: https://mobile3elements.shumaidata.com/mobile/verify_real_name
+    appcode: 30e58febaf874777a4583d9378979f49
+
+JWT:
+  selfKey: 45s4d5s54d5s55444d2w25sa3d145k1s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
